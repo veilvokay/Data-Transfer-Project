@@ -6,22 +6,29 @@ using UnityEngine.UI;
 
 public class MainManager : MonoBehaviour
 {
+    private GameManager Manager;
+
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
 
+    public Text BestScoreText;
     public Text ScoreText;
-    public GameObject GameOverText;
+    public GameObject GameOverContainer;
     
     private bool m_Started = false;
-    private int m_Points;
-    
-    private bool m_GameOver = false;
 
     
     // Start is called before the first frame update
     void Start()
     {
+        if (GameManager.GetGameManager() != null)
+        {
+            Manager = GameManager.GetGameManager();
+            Manager.CurrentPoints = 0;
+            UpdateBestScore();
+        }
+
         const float step = 0.6f;
         int perLine = Mathf.FloorToInt(4.0f / step);
         
@@ -33,7 +40,9 @@ public class MainManager : MonoBehaviour
                 Vector3 position = new Vector3(-1.5f + step * x, 2.5f + i * 0.3f, 0);
                 var brick = Instantiate(BrickPrefab, position, Quaternion.identity);
                 brick.PointValue = pointCountArray[i];
-                brick.onDestroyed.AddListener(AddPoint);
+                //brick.onDestroyed.AddListener(AddPoint);
+                brick.onDestroyed.AddListener(UpdateScore);
+
             }
         }
     }
@@ -53,24 +62,29 @@ public class MainManager : MonoBehaviour
                 Ball.AddForce(forceDir * 2.0f, ForceMode.VelocityChange);
             }
         }
-        else if (m_GameOver)
-        {
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
-            }
-        }
     }
 
-    void AddPoint(int point)
+    //void AddPoint(int point)
+    //{
+    //    m_Points += point;
+    //    ScoreText.text = $"Score : {m_Points}";
+    //}
+
+    void UpdateScore(int point)
     {
-        m_Points += point;
-        ScoreText.text = $"Score : {m_Points}";
+        int currPoints = Manager.AddPoint(point);
+        ScoreText.text = $"Score : {currPoints}";
+    }
+
+    void UpdateBestScore()
+    {
+        int bestScore = GameManager.GetGameManager().UpdateBestScore();
+        BestScoreText.text = $"Best Score : : {bestScore}";
     }
 
     public void GameOver()
     {
-        m_GameOver = true;
-        GameOverText.SetActive(true);
+        UpdateBestScore();
+        GameOverContainer.SetActive(true);
     }
 }
