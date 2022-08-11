@@ -1,7 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class MainManager : MonoBehaviour
@@ -40,7 +37,6 @@ public class MainManager : MonoBehaviour
                 Vector3 position = new Vector3(-1.5f + step * x, 2.5f + i * 0.3f, 0);
                 var brick = Instantiate(BrickPrefab, position, Quaternion.identity);
                 brick.PointValue = pointCountArray[i];
-                //brick.onDestroyed.AddListener(AddPoint);
                 brick.onDestroyed.AddListener(UpdateScore);
 
             }
@@ -63,12 +59,6 @@ public class MainManager : MonoBehaviour
             }
         }
     }
-
-    //void AddPoint(int point)
-    //{
-    //    m_Points += point;
-    //    ScoreText.text = $"Score : {m_Points}";
-    //}
 
     void UpdateScore(int point)
     {

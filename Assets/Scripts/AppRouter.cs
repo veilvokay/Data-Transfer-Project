@@ -26,6 +26,8 @@ public class AppRouter : MonoBehaviour
 
     public void QuitGame()
     {
+        GameManager.GetGameManager().SaveSesionData();
+
 #if UNITY_EDITOR
         EditorApplication.ExitPlaymode();
 #else

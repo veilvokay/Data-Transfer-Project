@@ -1,8 +1,7 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.IO;
 
 public class GameManager : MonoBehaviour
 {
@@ -44,6 +43,8 @@ public class GameManager : MonoBehaviour
         }
         Instance = this;
         DontDestroyOnLoad(gameObject);
+
+        LoadSessionData();
     }
 
     public int AddPoint(int point)
@@ -71,5 +72,40 @@ public class GameManager : MonoBehaviour
     {
         int bestScore = UpdateBestScore();
         textObject.text = $"Best Score : {PlayerName} : {bestScore}";
+    }
+
+
+    [System.Serializable]
+    class SaveData
+    {
+        public string PlayerName;
+        public int PlayerBestScore;
+    }
+
+    public void SaveSesionData()
+    {
+        SaveData data = new SaveData
+        {
+            PlayerName = PlayerName,
+            PlayerBestScore = CurrentBestScore
+        };
+
+        string json = JsonUtility.ToJson(data);
+
+        File.WriteAllText(Application.persistentDataPath + "/game-save-file.json", json);
+    }
+
+    public void LoadSessionData()
+    {
+        string path = Application.persistentDataPath + "/game-save-file.json";
+
+        if (File.Exists(path))
+        {
+            string json = File.ReadAllText(path);
+            SaveData data = JsonUtility.FromJson<SaveData>(json);
+
+            PlayerName = data.PlayerName;
+            CurrentBestScore = data.PlayerBestScore;
+        }
     }
 }
