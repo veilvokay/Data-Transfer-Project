@@ -1,6 +1,8 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +14,7 @@ public class GameManager : MonoBehaviour
 
     private int m_PointsCurrent = 0;
     private int m_PointsBestScore = 0;
+    private string m_PlyaerName;
 
     public int CurrentPoints
     {
@@ -23,6 +26,12 @@ public class GameManager : MonoBehaviour
     {
         get => m_PointsBestScore;
         set => m_PointsBestScore = value;
+    }
+
+    public string PlayerName
+    {
+        get => m_PlyaerName;
+        set => m_PlyaerName = value;
     }
 
 
@@ -50,5 +59,17 @@ public class GameManager : MonoBehaviour
             m_PointsBestScore = m_PointsCurrent;
         }
         return m_PointsBestScore;
+    }
+
+    public void UpdateBestScoreText(TextMeshProUGUI textObject)
+    {
+        int bestScore = UpdateBestScore();
+        textObject.text = $"Best Score : {PlayerName} : {bestScore}";
+    }
+
+    public void UpdateBestScoreText(Text textObject)
+    {
+        int bestScore = UpdateBestScore();
+        textObject.text = $"Best Score : {PlayerName} : {bestScore}";
     }
 }

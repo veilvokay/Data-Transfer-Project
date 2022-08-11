@@ -26,7 +26,7 @@ public class MainManager : MonoBehaviour
         {
             Manager = GameManager.GetGameManager();
             Manager.CurrentPoints = 0;
-            UpdateBestScore();
+            Manager.UpdateBestScoreText(BestScoreText);
         }
 
         const float step = 0.6f;
@@ -76,15 +76,9 @@ public class MainManager : MonoBehaviour
         ScoreText.text = $"Score : {currPoints}";
     }
 
-    void UpdateBestScore()
-    {
-        int bestScore = GameManager.GetGameManager().UpdateBestScore();
-        BestScoreText.text = $"Best Score : : {bestScore}";
-    }
-
     public void GameOver()
     {
-        UpdateBestScore();
+        Manager.UpdateBestScoreText(BestScoreText);
         GameOverContainer.SetActive(true);
     }
 }
